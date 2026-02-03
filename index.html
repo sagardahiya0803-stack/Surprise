@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ff6b9d">
+    <title>Valentine's Surprise 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            touch-action: manipulation;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        /* Floating hearts background animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(10deg); opacity: 0.6; }
+        }
+
+        .bg-hearts {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0.2;
+            animation: float 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 90%;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            margin: 20px;
+            z-index: 10;
+            border: 3px solid rgba(255, 107, 157, 0.2);
+        }
+
+        /* Sender header */
+        .sender-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 20px 20px 0 0;
+            margin: -20px -20px 20px -20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sender-header::before {
+            content: '💌';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .sender-header::after {
+            content: '💝';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            animation: pulse 2s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.2); }
+        }
+
+        .from-text {
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .name-input-screen,
+        .main-screen,
+        .calculator-screen,
+        .mcq-screen {
+            position: relative;
+        }
+
+        .name-input-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .calculator-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .calculator-screen.show {
+            display: flex;
+        }
+
+        .main-screen {
+            display: none;
+        }
+
+        .main-screen.show {
+            display: block;
+        }
+
+        h1 {
+            color: #ff6b9d;
+            font-size: clamp(1.8em, 6vw, 2.5em);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(255, 107, 157, 0.2);
+            line-height: 1.2;
+        }
+
+        /* Cute decorative elements container */
+        .cute-elements {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .cute-icon {
+            width: clamp(60px, 15vw, 80px);
+            height: clamp(60px, 15vw, 80px);
+            animation: bounce-subtle 2s ease-in-out infinite;
+        }
+
+        .cute-icon:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .cute-icon:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .panda-container {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .panda {
+            width: clamp(150px, 40vw, 200px);
+            height: clamp(150px, 40vw, 200px);
+            margin: 0 auto;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Heart rain decoration */
+        .heart-decoration {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            animation: fall 3s ease-in infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(300px) rotate(360deg); opacity: 0; }
+        }
+
+        .question {
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            color: #333;
+            margin: 15px 0;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .name-prompt {
+            font-size: clamp(1.1em, 4vw, 1.3em);
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .name-input {
+            padding: 15px 20px;
+            font-size: clamp(1em, 4vw, 1.2em);
+            border: 3px solid #ff6b9d;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .name-input:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 15px rgba(245, 87, 108, 0.3);
+            transform: scale(1.02);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: clamp(1em, 4vw, 1.2em);
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:active {
+            transform: none;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff6b9d, #f5576c);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        #yesBtn:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+            color: #666;
+            position: relative;
+        }
+
+        /* Traveling mode for No button */
+        #noBtn.traveling {
+            position: fixed;
+            z-index: 1000;
+        }
+
+        #continueBtn {
+            background: linear-gradient(135deg, #ff6b9d, #f5576c);
+            color: white;
+            padding: 15px 40px;
+            font-size: clamp(1em, 4vw, 1.2em);
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        #continueBtn:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #continueBtn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        #continueBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Calculator styles */
+        .calculator-title {
+            font-size: clamp(1.3em, 5vw, 1.8em);
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .calculator-question {
+            font-size: clamp(1.5em, 5vw, 2em);
+            color: #333;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .calculator-input {
+            padding: 15px 20px;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            border: 3px solid #ff6b9d;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px 0;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .calculator-input:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 15px rgba(245, 87, 108, 0.3);
+            transform: scale(1.02);
+        }
+
+        .calculator-hint {
+            font-size: clamp(0.9em, 3vw, 1em);
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .calculator-feedback {
+            font-size: clamp(1em, 3.5vw, 1.2em);
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            min-height: 30px;
+        }
+
+        .calculator-feedback.correct {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .calculator-feedback.incorrect {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        /* MCQ Screen styles */
+        .mcq-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mcq-screen.show {
+            display: flex;
+        }
+
+        .mcq-title {
+            font-size: clamp(1.3em, 5vw, 1.8em);
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .mcq-question {
+            font-size: clamp(1.1em, 4vw, 1.3em);
+            color: #333;
+            margin: 20px 0;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .mcq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+
+        .mcq-option {
+            padding: 15px 20px;
+            font-size: clamp(1em, 3.5vw, 1.1em);
+            background: linear-gradient(135deg, #fff 0%, #ffeef3 100%);
+            border: 3px solid #ff6b9d;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .mcq-option:hover {
+            background: linear-gradient(135deg, #ffeef3 0%, #ffd6e0 100%);
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .mcq-option:active {
+            transform: scale(0.98) translateX(10px);
+        }
+
+        .mcq-option.selected {
+            background: linear-gradient(135deg, #ff6b9d, #f5576c);
+            color: white;
+            border-color: #f5576c;
+            transform: translateX(10px);
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        .mcq-submit {
+            background: linear-gradient(135deg, #ff6b9d, #f5576c);
+            color: white;
+            padding: 15px 40px;
+            font-size: clamp(1em, 4vw, 1.2em);
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .mcq-submit:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .mcq-submit:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .mcq-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .celebration.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .celebration-content {
+            max-width: 90%;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .celebration h2 {
+            font-size: clamp(2em, 8vw, 3em);
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            animation: heartbeat 1s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .celebration-message {
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            color: #333;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .celebration-emoji {
+            font-size: clamp(4em, 15vw, 6em);
+            margin: 20px 0;
+            animation: spin-slow 3s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Rose animation styles */
+        @keyframes riseAndFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(50vh) rotate(180deg) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(-20vh) rotate(720deg) scale(1);
+            }
+            100% {
+                transform: translateY(-30vh) rotate(800deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .floating-rose {
+            position: fixed;
+            font-size: clamp(30px, 8vw, 50px);
+            z-index: 999;
+            pointer-events: none;
+            animation: riseAndFloat 8s ease-in-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background hearts -->
+    <div class="bg-hearts" style="top: 10%; left: 10%;">💕</div>
+    <div class="bg-hearts" style="top: 20%; right: 15%; animation-delay: 0.5s;">💖</div>
+    <div class="bg-hearts" style="top: 60%; left: 20%; animation-delay: 1s;">💗</div>
+    <div class="bg-hearts" style="top: 70%; right: 10%; animation-delay: 1.5s;">💝</div>
+    <div class="bg-hearts" style="top: 40%; left: 80%; animation-delay: 2s;">💞</div>
+
+    <div class="container">
+        <div class="sender-header">
+            <div class="from-text">From: Sagar 💝</div>
+        </div>
+
+        <!-- Name Input Screen -->
+        <div class="name-input-screen" id="nameInputScreen">
+            <h1>Welcome! 💕</h1>
+            <div class="cute-elements">
+                <div class="cute-icon">🌹</div>
+                <div class="cute-icon">💖</div>
+                <div class="cute-icon">🐼</div>
+            </div>
+            <p class="name-prompt">Please enter your name to continue:</p>
+            <input type="text" id="nameInput" class="name-input" placeholder="Your name..." autocomplete="off">
+            <button id="continueBtn" class="btn" onclick="handleContinue()">Continue 💕</button>
+        </div>
+
+        <!-- Calculator Screen -->
+        <div class="calculator-screen" id="calculatorScreen">
+            <h2 class="calculator-title">Quick Math Challenge! 🧮</h2>
+            <p class="calculator-question" id="calculatorQuestion">What is 5 + 3?</p>
+            <input type="number" id="calculatorInput" class="calculator-input" placeholder="?" autocomplete="off" inputmode="numeric">
+            <p class="calculator-hint">💡 Just a simple addition!</p>
+            <div class="calculator-feedback" id="calculatorFeedback"></div>
+        </div>
+
+        <!-- MCQ Screen -->
+        <div class="mcq-screen" id="mcqScreen">
+            <h2 class="mcq-title">One More Question! 💝</h2>
+            <p class="mcq-question">Where and how would you like to celebrate This Valentine's with me?</p>
+            <div class="mcq-options">
+                <div class="mcq-option" onclick="selectOption(this, 'a')">
+                    <strong>A)</strong> With Drink 🍹
+                </div>
+                <div class="mcq-option" onclick="selectOption(this, 'b')">
+                    <strong>B)</strong> Without Drink 🚫🍺
+                </div>
+                <div class="mcq-option" onclick="selectOption(this, 'c')">
+                    <strong>C)</strong> Date 🌹💕
+                </div>
+                <div class="mcq-option" onclick="selectOption(this, 'd')">
+                    <strong>D)</strong> Home 🏠
+                </div>
+                <div class="mcq-option" onclick="selectOption(this, 'e')">
+                    <strong>E)</strong> All of the Above 🎉✨
+                </div>
+            </div>
+            <button id="mcqSubmit" class="mcq-submit" onclick="handleMCQSubmit()" disabled>Submit 💕</button>
+        </div>
+
+        <!-- Main Valentine Screen -->
+        <div class="main-screen" id="mainScreen">
+            <h1 id="greeting">Hey! 💕</h1>
+            
+            <div class="panda-container">
+                <svg class="panda" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left ear -->
+                    <circle cx="50" cy="50" r="30" fill="#000"/>
+                    <!-- Right ear -->
+                    <circle cx="150" cy="50" r="30" fill="#000"/>
+                    <!-- Face -->
+                    <circle cx="100" cy="100" r="70" fill="#fff"/>
+                    <!-- Left eye patch -->
+                    <ellipse cx="75" cy="90" rx="20" ry="25" fill="#000"/>
+                    <!-- Right eye patch -->
+                    <ellipse cx="125" cy="90" rx="20" ry="25" fill="#000"/>
+                    <!-- Left eye -->
+                    <circle cx="75" cy="90" r="8" fill="#fff"/>
+                    <!-- Right eye -->
+                    <circle cx="125" cy="90" r="8" fill="#fff"/>
+                    <!-- Nose -->
+                    <ellipse cx="100" cy="110" rx="8" ry="6" fill="#000"/>
+                    <!-- Mouth -->
+                    <path d="M 85 120 Q 100 130 115 120" stroke="#000" stroke-width="3" fill="none"/>
+                    <!-- Blush left -->
+                    <circle cx="60" cy="105" r="8" fill="#ffb6c1" opacity="0.6"/>
+                    <!-- Blush right -->
+                    <circle cx="140" cy="105" r="8" fill="#ffb6c1" opacity="0.6"/>
+                    <!-- Heart on chest -->
+                    <path d="M 100 135 L 95 125 Q 90 120 100 130 Q 110 120 105 125 Z" fill="#ff6b9d"/>
+                </svg>
+            </div>
+
+            <p class="question">Will you be my Valentine? 🌹</p>
+            
+            <div class="buttons">
+                <button id="yesBtn" class="btn" onclick="handleYes()">Yes! 💕</button>
+                <button id="noBtn" class="btn">No 😢</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration overlay -->
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <h2>Yaaay! 🎉💕</h2>
+            <div class="celebration-emoji">🌹💖🐼</div>
+            <p class="celebration-message">
+                You've made me the happiest! 💕<br>
+                Thank you for being my Valentine! 🌹<br>
+                <strong>I love you so much! ❤️</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        let userName = '';
+        let attempts = 0;
+        const correctAnswer = 8; // 5 + 3 = 8
+        let selectedMCQOption = null;
+        let userChoice = '';
+
+        function handleContinue() {
+            const nameInput = document.getElementById('nameInput');
+            userName = nameInput.value.trim();
+            
+            if (!userName) {
+                alert('Please enter your name! 💕');
+                return;
+            }
+            
+            // Hide name input screen and show calculator screen
+            document.getElementById('nameInputScreen').style.display = 'none';
+            document.getElementById('calculatorScreen').classList.add('show');
+            
+            // Focus on calculator input
+            setTimeout(() => {
+                document.getElementById('calculatorInput').focus();
+            }, 100);
+            
+            // Blur the name input to hide mobile keyboard
+            nameInput.blur();
+        }
+
+        // Calculator input handler
+        document.getElementById('calculatorInput').addEventListener('input', function() {
+            const userAnswer = parseInt(this.value);
+            const feedback = document.getElementById('calculatorFeedback');
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = '';
+                feedback.className = 'calculator-feedback';
+                return;
+            }
+            
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = '🎉 Correct! Loading next question...';
+                feedback.className = 'calculator-feedback correct';
+                
+                // Disable input
+                this.disabled = true;
+                
+                // Create roses animation
+                createRoses();
+                
+                // Show MCQ screen after a delay
+                setTimeout(() => {
+                    showMCQScreen();
+                }, 2000);
+            } else {
+                attempts++;
+                if (attempts === 1) {
+                    feedback.textContent = '🤔 Not quite! Try again...';
+                } else if (attempts === 2) {
+                    feedback.textContent = '💡 Hint: It\'s 8!';
+                } else {
+                    feedback.textContent = '❤️ Almost there! One more try!';
+                }
+                feedback.className = 'calculator-feedback incorrect';
+            }
+        });
+
+        // Allow pressing Enter to submit
+        document.getElementById('calculatorInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+
+        function createRoses() {
+            const roseCount = isMobile ? 15 : 20;
+            
+            for (let i = 0; i < roseCount; i++) {
+                setTimeout(() => {
+                    const rose = document.createElement('div');
+                    rose.className = 'floating-rose';
+                    rose.innerHTML = '🌹';
+                    rose.style.left = (Math.random() * 90 + 5) + '%';
+                    rose.style.animationDelay = (Math.random() * 0.5) + 's';
+                    rose.style.animationDuration = (6 + Math.random() * 2) + 's';
+                    document.body.appendChild(rose);
+                    
+                    setTimeout(() => {
+                        rose.remove();
+                    }, 8000);
+                }, i * 100);
+            }
+        }
+
+        function showMCQScreen() {
+            // Hide calculator screen and show MCQ screen
+            document.getElementById('calculatorScreen').style.display = 'none';
+            document.getElementById('mcqScreen').classList.add('show');
+            
+            // Create some falling hearts
+            createFallingHearts();
+        }
+
+        function selectOption(element, option) {
+            // Remove selected class from all options
+            const allOptions = document.querySelectorAll('.mcq-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store the selected option
+            selectedMCQOption = element;
+            userChoice = option;
+            
+            // Enable submit button
+            document.getElementById('mcqSubmit').disabled = false;
+        }
+
+        function handleMCQSubmit() {
+            if (!selectedMCQOption) return;
+            
+            // Get the choice text
+            const choiceTexts = {
+                'a': 'With Drink 🍹',
+                'b': 'Without Drink 🚫🍺',
+                'c': 'Date 🌹💕',
+                'd': 'Home 🏠',
+                'e': 'All of the Above 🎉✨'
+            };
+            
+            // Store the choice for later display (optional)
+            const selectedChoice = choiceTexts[userChoice];
+            
+            // Create celebration effect
+            createConfetti();
+            
+            // Show Valentine question after a delay
+            setTimeout(() => {
+                showValentineQuestion();
+            }, 1500);
+        }
+
+        function createConfetti() {
+            const confettiEmojis = ['🎉', '✨', '💖', '🌟', '💫', '🎊'];
+            const confettiCount = isMobile ? 20 : 30;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.innerHTML = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-50px';
+                    confetti.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    confetti.style.zIndex = '999';
+                    confetti.style.pointerEvents = 'none';
+                    document.body.appendChild(confetti);
+                    
+                    // Animate confetti falling
+                    let pos = -50;
+                    const fallSpeed = Math.random() * 3 + 2;
+                    const sway = Math.random() * 100 - 50;
+                    const interval = setInterval(() => {
+                        pos += fallSpeed;
+                        confetti.style.top = pos + 'px';
+                        confetti.style.left = (parseFloat(confetti.style.left) + Math.sin(pos / 20) * 2) + 'px';
+                        confetti.style.transform = `rotate(${pos * 2}deg)`;
+                        confetti.style.opacity = 1 - (pos / window.innerHeight);
+                        
+                        if (pos > window.innerHeight) {
+                            clearInterval(interval);
+                            confetti.remove();
+                        }
+                    }, 20);
+                }, i * 50);
+            }
+        }
+
+        function showValentineQuestion() {
+            // Hide MCQ screen and show main Valentine screen
+            document.getElementById('mcqScreen').style.display = 'none';
+            document.getElementById('mainScreen').classList.add('show');
+            
+            // Update greeting with the user's name
+            document.getElementById('greeting').textContent = `Hey ${userName}! 💕`;
+            
+            // Create some falling hearts
+            createFallingHearts();
+        }
+
+        function createFallingHearts() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-decoration';
+                    heart.innerHTML = '💖';
+                    heart.style.left = (Math.random() * 80 + 10) + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    document.querySelector('.main-screen').appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 300);
+            }
+        }
+
+        // Enable continue button only when there's text
+        document.getElementById('nameInput').addEventListener('input', function() {
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.disabled = this.value.trim() === '';
+        });
+
+        // Allow pressing Enter to continue
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleContinue();
+            }
+        });
+
+        // ========== YES/NO BUTTON FUNCTIONALITY (SHY NO BUTTON) ==========
+        const noBtn = document.getElementById('noBtn');
+        let moveCount = 0;
+        let isMoving = false;
+        let hasMoved = false; // Track if button has started traveling
+        
+        // Function to move the button
+        function moveButton(event) {
+            if (isMoving) return;
+            isMoving = true;
+            
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const btn = document.getElementById('noBtn');
+            
+            // On first move, switch to traveling mode
+            if (!hasMoved) {
+                btn.classList.add('traveling');
+                hasMoved = true;
+            }
+            
+            const btnRect = btn.getBoundingClientRect();
+            
+            // Get viewport dimensions
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate safe boundaries (with more padding on mobile)
+            const padding = isMobile ? 50 : 30;
+            const maxX = viewportWidth - btnRect.width - padding;
+            const maxY = viewportHeight - btnRect.height - padding;
+            
+            // Generate random position within safe boundaries
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
+            
+            // Apply new position with faster transition
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.transition = 'all 0.1s ease';
+            
+            // Make Yes button bigger each time No is avoided
+            moveCount++;
+            const yesBtn = document.getElementById('yesBtn');
+            const newSize = Math.min(1 + (moveCount * 0.15), 2.5); // Cap at 2.5x size
+            yesBtn.style.transform = `scale(${newSize})`;
+            
+            // Add a playful message after several attempts
+            if (moveCount === 5) {
+                alert("Nice try! 😄 The 'No' button is too shy!");
+            } else if (moveCount === 10) {
+                alert("Still trying? 😊 Maybe try 'Yes' instead? 💕");
+            }
+            
+            // Reset moving flag after animation
+            setTimeout(() => {
+                isMoving = false;
+            }, 150);
+        }
+
+        // Function to check proximity and move button preemptively
+        function checkProximity(event) {
+            // Only check proximity after button has started traveling
+            if (isMoving || !hasMoved) return;
+            
+            const btn = document.getElementById('noBtn');
+            const btnRect = btn.getBoundingClientRect();
+            
+            let cursorX, cursorY;
+            
+            if (event.type === 'mousemove') {
+                cursorX = event.clientX;
+                cursorY = event.clientY;
+            } else if (event.type === 'touchmove') {
+                if (event.touches.length > 0) {
+                    cursorX = event.touches[0].clientX;
+                    cursorY = event.touches[0].clientY;
+                } else {
+                    return;
+                }
+            }
+            
+            // Calculate distance from cursor to button center
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            const distance = Math.sqrt(
+                Math.pow(cursorX - btnCenterX, 2) + 
+                Math.pow(cursorY - btnCenterY, 2)
+            );
+            
+            // Move button if cursor gets too close (within 100px)
+            const proximityThreshold = isMobile ? 80 : 100;
+            if (distance < proximityThreshold) {
+                moveButton(event);
+            }
+        }
+
+        // Desktop events - move on hover
+        if (!isMobile) {
+            noBtn.addEventListener('mouseenter', moveButton);
+            document.addEventListener('mousemove', checkProximity);
+        }
+        
+        // Mobile-optimized touch events
+        noBtn.addEventListener('touchstart', function(e) {
+            moveButton(e);
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            checkProximity(e);
+        }, { passive: true });
+
+        // Backup: move on any click attempt
+        noBtn.addEventListener('click', function(e) {
+            moveButton(e);
+        });
+
+        // Extra backup: move on pointer down
+        noBtn.addEventListener('pointerdown', function(e) {
+            moveButton(e);
+        });
+        // ========== END OF YES/NO BUTTON FUNCTIONALITY ==========
+
+        function handleYes() {
+            const celebration = document.getElementById('celebration');
+            celebration.classList.add('show');
+            
+            // Haptic feedback on mobile
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100, 50, 200]);
+            }
+            
+            // Create floating hearts
+            createHearts();
+        }
+
+        function createHearts() {
+            const heartCount = isMobile ? 25 : 40;
+            const heartEmojis = ['💖', '💕', '💗', '💓', '💝', '💞', '❤️', '🌹'];
+            
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * window.innerWidth + 'px';
+                    heart.style.top = window.innerHeight + 'px';
+                    heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    heart.style.zIndex = '1001';
+                    heart.style.pointerEvents = 'none';
+                    document.body.appendChild(heart);
+                    
+                    // Animate heart floating up
+                    let pos = window.innerHeight;
+                    const interval = setInterval(() => {
+                        pos -= 3;
+                        heart.style.top = pos + 'px';
+                        heart.style.opacity = pos / window.innerHeight;
+                        
+                        if (pos < -50) {
+                            clearInterval(interval);
+                            heart.remove();
+                        }
+                    }, 20);
+                }, i * 80);
+            }
+        }
+
+        // Set initial state of continue button
+        document.getElementById('continueBtn').disabled = true;
+
+        // Prevent accidental zoom on double-tap (iOS)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Fix for iOS viewport height issue
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
+    </script>
+</body>
+</html>
